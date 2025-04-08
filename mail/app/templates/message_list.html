@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Email Messages</h2>
+    <a href="{% url 'message_create' %}" class="btn btn-primary mb-3">Create New Message</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Groups</th>
+                <th>Subject</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for message in messages %}
+                <tr>
+                    <td>
+                        {% for group in message.groups.all %}
+                            {{ group.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>{{ message.subject }}</td>
+
+                    <td>
+                        <a href="{% url 'message_update' message.pk %}" class="btn btn-primary">Edit</a>
+                        <a href="{% url 'message_delete' message.pk %}" class="btn btn-danger">Delete</a>
+                        <a href="{% url 'message_send' message.pk %}" class="btn btn-primary">Send</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="3">No messages found</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

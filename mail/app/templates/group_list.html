@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Email Groups</h2>
+    <a href="{% url 'group_create' %}" class="btn btn-primary mb-3">Add New Group</a>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for group in groups %}
+                <tr>
+                    <td>{{ group.name }}</td>
+                    <td>
+                        <a href="{% url 'group_update' group.pk %}" class="btn btn-primary">Edit</a>
+                        <a href="{% url 'group_delete' group.pk %}" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="2">No groups found</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

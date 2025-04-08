@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>{% if object %}Edit{% else %}Create{% endif %} Message</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a href="{% url 'message_list' %}" class="btn btn-danger">Cancel</a>
+    </form>
+{% endblock %}

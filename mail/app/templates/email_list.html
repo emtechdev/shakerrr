@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2><i class="fas fa-envelope me-2"></i>Emails</h2>
+
+    <!-- Action Buttons -->
+    <div class="action-group mb-4">
+        <a href="{% url 'email_create' %}" class="w-[200px]">
+            <i class="fas fa-plus "></i> Add New Email
+        </a>
+
+        <!-- Export Form -->
+        <form method="get" action="{% url 'email_export' %}" class="form-group ms-3">
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-download"></i></span>
+                <select name="group" id="export_group" class="form-select" onchange="this.form.submit()">
+                    <option value="">Export Group...</option>
+                    {% for group in groups %}
+                        <option value="{{ group.id }}">{{ group.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </form>
+
+        <!-- Import Form -->
+        <form method="post" action="{% url 'email_import' %}" enctype="multipart/form-data" class="form-group ms-3">
+            {% csrf_token %}
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-upload"></i></span>
+                <select name="group" id="import_group" class="form-select" required>
+                    <option value="">Import to Group...</option>
+                    {% for group in groups %}
+                        <option value="{{ group.id }}">{{ group.name }}</option>
+                    {% endfor %}
+                </select>
+                <input type="file" name="excel_file" accept=".xlsx" required id="excel_file" class="form-control" style="max-width: 200px;">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-upload me-1"></i> Import</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Filter Form -->
+    <form method="get" class="form-group mb-4">
+        <div class="input-group w-auto">
+            <span class="input-group-text"><i class="fas fa-filter"></i></span>
+            <select name="group" id="group" class="form-select" onchange="this.form.submit()">
+                <option value="">All Groups</option>
+                {% for group in groups %}
+                    <option value="{{ group.id }}" {% if selected_group == group.id|stringformat:"s" %}selected{% endif %}>
+                        {{ group.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+
+    <!-- Messages -->
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="{{ message.tags }} alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Emails Table -->
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Email</th>
+                    <th scope="col">Group</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for email in emails %}
+                    <tr>
+                        <td>{{ email.email }}</td>
+                        <td>{{ email.email_group.name }}</td>
+                        <td>
+                            <a href="{% url 'email_update' email.pk %}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a href="{% url 'email_delete' email.pk %}" class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center">No emails found</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

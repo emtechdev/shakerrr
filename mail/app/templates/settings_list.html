@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Email Settings</h2>
+    <a href="{% url 'settings_create' %}" class="btn btn-primary mb-3">Add New Settings</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Host</th>
+                <th>Port</th>
+                <th>User</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for setting in settings %}
+                <tr>
+                    <td>{{ setting.email_host }}</td>
+                    <td>{{ setting.email_port }}</td>
+                    <td>{{ setting.email_host_user }}</td>
+                    <td>
+                        <a href="{% url 'settings_update' setting.pk %}" class="btn btn-primary">Edit</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="4">No settings found</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
